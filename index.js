@@ -310,6 +310,7 @@ var parseAsType = {
 
 		var requireds = [];
 		var properties = {};
+		var example;
 
 		var combinedComponents = merge({}, existingComponents || {}, newComponentsByRef || {});
 
@@ -326,6 +327,11 @@ var parseAsType = {
 
 			properties[key] = prop.swagger;
 
+			if (prop.swagger.example) {
+				if (!example) example = {};
+				example[key] = prop.swagger.example;
+			}
+
 			if (get(child, 'schema._flags.presence') === 'required' || prop.swagger.__required) {
 				requireds.push(key);
 				delete prop.swagger.__required;
@@ -340,6 +346,10 @@ var parseAsType = {
 
 		if (get(schema, '_flags.allowUnknown') === false) {
 			swagger.additionalProperties = false;
+		}
+
+		if (example) {
+			swagger.example = example;
 		}
 
 		return swagger;
