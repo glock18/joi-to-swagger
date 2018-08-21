@@ -75,7 +75,11 @@ module.exports = exports = function parse (schema, existingComponents) {
 	}
 
 	if (override) {
-		Object.assign(swagger, typeof override === 'function' ? override(swagger, schema) : override);
+		if (typeof override === 'function') {
+			override(swagger, schema);
+		} else {
+			Object.assign(swagger, override);
+		}
 	}
 
 	if (get(schema, '_flags.presence') === 'forbidden') {
