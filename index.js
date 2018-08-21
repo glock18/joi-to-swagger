@@ -10,6 +10,7 @@ var patterns = {
 	alphanum: '^[a-zA-Z0-9]*$',
 	alphanumLower: '^[a-z0-9]*$',
 	alphanumUpper: '^[A-Z0-9]*$',
+	hex: '^[0-9a-f]*$'
 };
 
 module.exports = exports = function parse (schema, existingComponents) {
@@ -54,6 +55,10 @@ module.exports = exports = function parse (schema, existingComponents) {
 		swagger.description = schema._description;
 	}
 
+	if (schema._examples) {
+		swagger.example = schema._examples[0];
+	}
+
 	var label = get(schema, '_flags.label');
 	if (label) {
 		swagger.title = label;
@@ -70,7 +75,7 @@ module.exports = exports = function parse (schema, existingComponents) {
 	}
 
 	if (override) {
-		Object.assign(swagger, override);
+		Object.assign(swagger, typeof override === 'function' ? override(swagger, schema) : override);
 	}
 
 	if (get(schema, '_flags.presence') === 'forbidden') {
@@ -147,6 +152,10 @@ var parseAsType = {
 			} else {
 				swagger.pattern = patterns.alphanum;
 			}
+		}
+
+		if (find(schema._tests, { name: 'hex' })) {
+			swagger.pattern = patterns.hex;
 		}
 
 		if (find(schema._tests, { name: 'email' })) {
