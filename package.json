@@ -30,12 +30,12 @@
     "eslint-config-chiper": "~2.2.0",
     "eslint-plugin-node": "~6.0.0",
     "eslint-plugin-promise": "~3.8.0",
-    "joi": "~13.4.0",
+    "joi": "^10",
     "tap": "~12.0.1",
     "tapsuite": "~1.1.1"
   },
   "peerDependencies": {
-    "joi": ">= 13"
+    "joi": ">= 10"
   },
   "files": [
     "index.js"
